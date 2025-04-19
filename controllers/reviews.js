@@ -1,5 +1,6 @@
 const Review = require('../models/Review');
 const mongoose = require('mongoose'); // เพิ่มถ้ายังไม่มี
+
 // @desc     Create or Update Review
 // @route    POST /api/v1/reviews/
 // @access   Private
@@ -38,7 +39,7 @@ exports.createReview = async (req, res, next) => {
 };
 
 // @desc    Get Review by Reservation ID
-// @route   GET /api/v1/reviews?reservationId=xxxx
+// @route   GET /api/v1/reviews/rid
 // @access  Private
 exports.getReview = async (req, res) => {
   try {
@@ -52,8 +53,8 @@ exports.getReview = async (req, res) => {
       reservationId: new mongoose.Types.ObjectId(reservationId),
     });
 
-    if (!review) {
-      return res.status(404).json({ success: false, message: "Review not found" });
+    if (review.length === 0) {
+      return res.status(200).json({ success: true, data: [] });
     }
 
     res.status(200).json({ success: true, data: review });
@@ -62,6 +63,7 @@ exports.getReview = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
 
 // @desc     Edit Review
 // @route    PUT /api/v1/reviews/:reservationId

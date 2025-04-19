@@ -19,6 +19,7 @@ const cors = require('cors');
 const coWorkingSpaces = require('./routes/coWorkingSpaces');
 const auth = require('./routes/auth');
 const reservations = require('./routes/reservations');
+const reviews = require('./routes/reviews');
 
   const app = express();
 
@@ -47,7 +48,8 @@ app.use(cors());
   //Mount routers
   app.use('/api/v1/coWorkingSpaces', coWorkingSpaces);
   app.use('/api/v1/auth',auth);
-  app.use('/api/v1/reservations', reservations)
+  app.use('/api/v1/reservations', reservations);
+  app.use('/api/v1/reviews', reviews)
 
   const PORT = process.env.PORT || 5000;
 
