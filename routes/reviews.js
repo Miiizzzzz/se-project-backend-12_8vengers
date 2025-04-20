@@ -1,15 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const { getReview, createReview, editReview } = require('../controllers/reviews');
+const {
+  getReview,
+  getReviews,
+  createReview,
+  updateReview,
+  deleteReview,
+} = require('../controllers/reviews');
 const { protect } = require('../middleware/auth');
 
-// GET สำหรับดึงรีวิวโดยใช้ reservationId จาก params
-router.get('/:reservationId', protect, getReview);
+router.get('/reservation/:reservationId', protect, getReviews);
 
-// POST สำหรับสร้างรีวิวใหม่
+router.get('/:reviewId', protect, getReview);
+
 router.post('/:reservationId', protect, createReview);
 
-// PUT สำหรับแก้ไขรีวิวที่มีอยู่
-router.put('/:reviewId', protect, editReview); // เดิมคือ reservationId
+router.put('/:reviewId', protect, updateReview);
+
+router.delete('/:reviewId', protect, deleteReview);
 
 module.exports = router;
