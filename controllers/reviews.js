@@ -2,13 +2,12 @@ const Review = require('../models/Review');
 const mongoose = require('mongoose'); // เพิ่มถ้ายังไม่มี
 
 // @desc     Create or Update Review
-// @route    POST /api/v1/reviews/
+// @route    POST /api/v1/reviews/:reservationId
 // @access   Private
 exports.createReview = async (req, res, next) => {
-  const { comment } = req.body;  // รับข้อมูลจาก body
-  const { reservationId } = req.params;  // รับ reservationId จาก URL
+  const { comment, coWorkingSpaceId } = req.body;  // Now accepting coWorkingSpaceId from body
+  const { reservationId } = req.params;
 
-  // ตรวจสอบให้แน่ใจว่า comment ไม่ว่าง
   if (!comment || comment.trim() === '') {
     return res.status(400).json({
       success: false,
@@ -16,13 +15,19 @@ exports.createReview = async (req, res, next) => {
     });
   }
 
+  if (!coWorkingSpaceId) {
+    return res.status(400).json({
+      success: false,
+      message: 'CoWorking Space ID is required.',
+    });
+  }
+
   try {
-    // สร้างรีวิวใหม่
     const newReview = await Review.create({
       reservationId,
-      user: req.user.id, // สมมุติว่า req.user.id มีข้อมูลผู้ใช้จาก authentication
+      user: req.user.id,
+      coWorkingSpaceId,
       comment,
-      // คุณสามารถเพิ่มข้อมูลอื่น ๆ เช่น rating หากต้องการ
     });
 
     return res.status(201).json({
@@ -37,6 +42,7 @@ exports.createReview = async (req, res, next) => {
     });
   }
 };
+
 
 // @desc    Get Review by Reservation ID
 // @route   GET /api/v1/reviews/rid
