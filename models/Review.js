@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// สร้าง schema สำหรับรีวิว
 const ReviewSchema = new mongoose.Schema(
   {
     // อ้างอิงถึงผู้ใช้ที่เขียนรีวิว (เชื่อมกับ User model)
@@ -13,6 +12,11 @@ const ReviewSchema = new mongoose.Schema(
     reservationId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Reservation',
+      required: true
+    },
+    coWorkingSpaceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CoWorkingSpace',
       required: true
     },
     // ข้อความรีวิว

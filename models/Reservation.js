@@ -19,12 +19,12 @@ const ReservationSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    rating: {
-        type: Number,
-        min: 1,
-        max: 5,
-        default: null
-      }
+    // rating: {
+    //     type: Number,
+    //     min: 1,
+    //     max: 5,
+    //     default: null
+    //   }
 });
 
 module.exports = mongoose.model('Reservation',ReservationSchema);

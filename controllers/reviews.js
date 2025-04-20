@@ -1,24 +1,40 @@
 const Review = require('../models/Review');
 const mongoose = require('mongoose');
 
-// @desc    Get one review by reviewId
-// @route   GET /api/v1/reviews/:reviewId
-// @access  Private
-exports.getReview = async (req, res) => {
-  const { reviewId } = req.params;
+// @desc     Create or Update Review
+// @route    POST /api/v1/reviews/
+// @access   Private
+exports.createReview = async (req, res, next) => {
+  const { comment } = req.body;  // รับข้อมูลจาก body
+  const { reservationId } = req.params;  // รับ reservationId จาก URL
+
+  // ตรวจสอบให้แน่ใจว่า comment ไม่ว่าง
+  if (!comment || comment.trim() === '') {
+    return res.status(400).json({
+      success: false,
+      message: 'Please provide a comment.',
+    });
+  }
 
   try {
-    const review = await Review.findById(reviewId);
-    if (!review) {
-      return res.status(404).json({ success: false, message: 'Review not found' });
-    }
+    // สร้างรีวิวใหม่
+    const newReview = await Review.create({
+      reservationId,
+      user: req.user.id, // สมมุติว่า req.user.id มีข้อมูลผู้ใช้จาก authentication
+      comment,
+      // คุณสามารถเพิ่มข้อมูลอื่น ๆ เช่น rating หากต้องการ
+    });
 
-    return res.status(200).json({ success: true, data: review });
+    return res.status(201).json({
+      success: true,
+      data: newReview,
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ success: false, message: 'Server Error' });
   }
 };
+
 
 // @desc    Get all reviews for a reservation
 // @route   GET /api/v1/reviews/reservation/:reservationId
